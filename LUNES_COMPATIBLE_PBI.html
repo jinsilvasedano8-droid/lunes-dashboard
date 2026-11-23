@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUNES · Power BI Compatible Edition | DIRESA Junín</title>
+  <style>
+    :root {
+      --pbi-bg: #F3F2F1;
+      --pbi-card: #FFFFFF;
+      --pbi-border: #E1DFDD;
+      --pbi-text: #252423;
+      --pbi-muted: #605E5C;
+      --pbi-blue: #118DFF;
+      --pbi-darkblue: #12239E;
+      --pbi-cyan: #00E5FF;
+      --pbi-green: #107C41;
+      --pbi-red: #D13438;
+      --pbi-orange: #E66C37;
+      --pbi-purple: #6B007B;
+      --pbi-yellow: #FFB900;
+      --pbi-hover: #EDEBE9;
+      --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--pbi-bg);
+      color: var(--pbi-text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Power BI Service Shell Header */
+    .pbi-app-bar {
+      height: 48px;
+      background-color: #252423;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .pbi-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .pbi-logo {
+      width: 22px;
+      height: 22px;
+      fill: #F2C811;
+    }
+    .pbi-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .pbi-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #FFFFFF;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+    .pbi-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .pbi-ribbon {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--pbi-border);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 13px;
+      color: var(--pbi-muted);
+    }
+    .pbi-ribbon strong {
+      color: var(--pbi-text);
+      font-size: 14px;
+    }
+    /* Main Report Canvas */
+    .pbi-canvas-wrapper {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    /* Filter Slicer Bar */
+    .pbi-slicer-bar {
+      background: #FFFFFF;
+      border: 1px solid var(--pbi-border);
+      border-radius: 4px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1.6px 3.6px rgba(0,0,0,0.05);
+    }
+    .pbi-slicer-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pbi-slicer-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--pbi-muted);
+    }
+    .pbi-slicer-btn {
+      background: #F3F2F1;
+      border: 1px solid var(--pbi-border);
+      padding: 6px 14px;
+      border-radius: 2px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--pbi-text);
+    }
+    .pbi-slicer-btn.active {
+      background: var(--pbi-blue);
+      color: #FFFFFF;
+      border-color: var(--pbi-blue);
+    }
+    /* KPI Cards Grid */
+    .pbi-cards-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .pbi-card {
+      background: var(--pbi-card);
+      border: 1px solid var(--pbi-border);
+      border-radius: 4px;
+      padding: 14px 16px;
+      box-shadow: 0 1.6px 3.6px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .pbi-card-title {
+      font-size: 12px;
+      color: var(--pbi-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .pbi-card-val {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--pbi-text);
+      line-height: 1.1;
+    }
+    .pbi-card-val.accent {
+      color: var(--pbi-blue);
+    }
+    .pbi-card-sub {
+      font-size: 11px;
+      color: var(--pbi-muted);
+      margin-top: 4px;
+    }
+    /* Visual Panels Grid */
+    .pbi-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .pbi-panel {
+      background: #FFFFFF;
+      border: 1px solid var(--pbi-border);
+      border-radius: 4px;
+      padding: 16px;
+      box-shadow: 0 1.6px 3.6px rgba(0,0,0,0.05);
+    }
+    .pbi-panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--pbi-text);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pbi-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .badge-crit { background: #FDE7E9; color: var(--pbi-red); }
+    .badge-alto { background: #FFF4CE; color: #8A3B00; }
+    .badge-med { background: #E1DFDD; color: #323130; }
+    .badge-bajo { background: #DFF6DD; color: var(--pbi-green); }
+    /* 3x3 Matrix */
+    .pbi-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .pbi-matrix th, .pbi-matrix td {
+      padding: 12px 8px;
+      border: 1px solid var(--pbi-border);
+      font-size: 13px;
+    }
+    .pbi-matrix th {
+      background: #F8F9FA;
+      color: var(--pbi-muted);
+      font-weight: 600;
+    }
+    .pbi-cell {
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .pbi-cell:hover { opacity: 0.85; outline: 2px solid var(--pbi-blue); }
+    .cell-c9 { background: #FDE7E9; color: var(--pbi-red); }
+    .cell-c6 { background: #FFF4CE; color: #8A3B00; }
+    .cell-c4 { background: #FFF1DF; color: var(--pbi-orange); }
+    .cell-c2 { background: #E1DFDD; color: #323130; }
+    .cell-c1 { background: #DFF6DD; color: var(--pbi-green); }
+    .cell-c0 { background: #FAFAFA; color: #C8C6C4; }
+    /* Tables */
+    .pbi-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .pbi-table th {
+      text-align: left;
+      padding: 8px;
+      background: #F8F9FA;
+      color: var(--pbi-muted);
+      border-bottom: 2px solid var(--pbi-border);
+      font-weight: 600;
+    }
+    .pbi-table td {
+      padding: 8px;
+      border-bottom: 1px solid var(--pbi-border);
+    }
+    .pbi-table tr:hover {
+      background: #F3F2F1;
+      cursor: pointer;
+    }
+    /* Charts */
+    .pbi-chart-svg {
+      width: 100%;
+      height: 220px;
+    }
+    /* Bottom Page Navigator Tabs (Power BI Style) */
+    .pbi-tab-bar {
+      height: 38px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--pbi-border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      overflow-x: auto;
+      user-select: none;
+    }
+    .pbi-tab {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--pbi-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+    .pbi-tab:hover {
+      color: var(--pbi-blue);
+      background: #FAF9F8;
+    }
+    .pbi-tab.active {
+      color: var(--pbi-blue);
+      border-bottom-color: var(--pbi-blue);
+      background: #F3F2F1;
+    }
+    /* Modal Detail Dialog */
+    .pbi-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .pbi-modal.open {
+      display: flex;
+    }
+    .pbi-modal-card {
+      background: #FFFFFF;
+      border-radius: 6px;
+      max-width: 650px;
+      width: 90%;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .pbi-modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--pbi-border);
+      padding-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Power BI Service Header -->
+  <header class="pbi-app-bar">
+    <div class="pbi-brand">
+      <svg class="pbi-logo" viewBox="0 0 24 24"><path d="M21 2H3a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zm-13 16H6v-6h2v6zm4 0h-2V8h2v10zm4 0h-2v-9h2v9zm4 0h-2V5h2v13z"/></svg>
+      <span>Power BI</span>
+      <span style="color:#C8C6C4;font-weight:400;margin:0 4px">|</span>
+      <span style="font-weight:400;font-size:13px">Mi área de trabajo &gt; <strong>LUNES (DIRESA Junín)</strong></span>
+    </div>
+    <div class="pbi-actions">
+      <button class="pbi-btn" onclick="window.location.reload()">↻ Actualizar</button>
+      <button class="pbi-btn" onclick="copyLink()">🔗 Compartir enlace</button>
+      <a class="pbi-btn" href="https://app.powerbi.com/groups/me/reports/028a568d-2ef8-43b5-8ced-2a37d7297ee4" target="_blank" style="text-decoration:none">↗ Abrir en Power BI Service</a>
+    </div>
+  </header>
+
+  <div class="pbi-ribbon">
+    <span>Sistema: <strong>Cobertura de Vacunación Regular – Adulto</strong></span>
+    <span>Norma: <strong>ISO 27001:2022</strong></span>
+    <span>Institución: <strong>DIRESA Junín</strong></span>
+    <span style="margin-left:auto;font-size:12px">Datos al corte: <strong>2023–2025</strong></span>
+  </div>
+
+  <!-- Main Canvas -->
+  <main class="pbi-canvas-wrapper">
+
+    <!-- Slicer Filter -->
+    <section class="pbi-slicer-bar">
+      <div class="pbi-slicer-group">
+        <span class="pbi-slicer-label">Año de seguimiento:</span>
+        <button class="pbi-slicer-btn active" data-year="0" onclick="setYear(0)">Todos</button>
+        <button class="pbi-slicer-btn" data-year="2023" onclick="setYear(2023)">2023</button>
+        <button class="pbi-slicer-btn" data-year="2024" onclick="setYear(2024)">2024</button>
+        <button class="pbi-slicer-btn" data-year="2025" onclick="setYear(2025)">2025</button>
+      </div>
+      <div>
+        <span id="activeContext" style="font-size:12px;color:var(--pbi-muted)">Contexto: <strong>Trienio completo 2023–2025</strong></span>
+      </div>
+    </section>
+
+    <!-- Top KPI Row -->
+    <section class="pbi-cards-row">
+      <div class="pbi-card">
+        <div class="pbi-card-title">TOTAL RIESGOS EVALUADOS</div>
+        <div class="pbi-card-val" id="kpiTotal">15</div>
+        <div class="pbi-card-sub">Inventario completo ISO 27001</div>
+      </div>
+      <div class="pbi-card">
+        <div class="pbi-card-title">NIVEL RIESGO PROMEDIO</div>
+        <div class="pbi-card-val accent" id="kpiNivel">5.33</div>
+        <div class="pbi-card-sub">Escala 1 a 9 (3 Críticos)</div>
+      </div>
+      <div class="pbi-card">
+        <div class="pbi-card-title">CUMPLIMIENTO DE CONTROLES</div>
+        <div class="pbi-card-val" id="kpiCumpl" style="color:var(--pbi-green)">83.3%</div>
+        <div class="pbi-card-sub" id="kpiCumplSub">10 ejecutados en 2025</div>
+      </div>
+      <div class="pbi-card">
+        <div class="pbi-card-title">INCIDENTES REPORTADOS</div>
+        <div class="pbi-card-val" id="kpiInc" style="color:var(--pbi-red)">1</div>
+        <div class="pbi-card-sub" id="kpiIncSub">↓ 75% frente a 2023</div>
+      </div>
+    </section>
+
+    <!-- Page Content Container -->
+    <div id="pageContainer"></div>
+
+  </main>
+
+  <!-- Bottom Page Navigation Tabs -->
+  <nav class="pbi-tab-bar" id="tabBar">
+    <div class="pbi-tab active" data-p="0" onclick="setPage(0)">Resumen ejecutivo</div>
+    <div class="pbi-tab" data-p="1" onclick="setPage(1)">Evaluación de riesgo (Matriz 3×3)</div>
+    <div class="pbi-tab" data-p="2" onclick="setPage(2)">Controles y soluciones</div>
+    <div class="pbi-tab" data-p="3" onclick="setPage(3)">Análisis financiero (ROI)</div>
+    <div class="pbi-tab" data-p="4" onclick="setPage(4)">Análisis de incidentes</div>
+    <div class="pbi-tab" data-p="5" onclick="setPage(5)">Optimización (Plan P1)</div>
+  </nav>
+
+  <!-- Modal Detail -->
+  <div class="pbi-modal" id="pbiModal" onclick="closeModal(event)">
+    <div class="pbi-modal-card" onclick="event.stopPropagation()">
+      <div class="pbi-modal-head">
+        <strong id="modalTitle" style="font-size:16px">Detalle del Riesgo</strong>
+        <button class="pbi-btn" style="color:#252423;border-color:#CCC;background:#F3F2F1" onclick="closeModal()">✕ Cerrar</button>
+      </div>
+      <div id="modalBody" style="font-size:13px;line-height:1.6"></div>
+    </div>
+  </div>
+
+  <script type="application/json" id="dataset">{"Dim_Tiempo": [{"A\u00f1o": 2023, "Etiqueta": "2023"}, {"A\u00f1o": 2024, "Etiqueta": "2024"}, {"A\u00f1o": 2025, "Etiqueta": "2025"}], "Dim_Riesgo": [{"ID_Riesgo": "R01", "Riesgo": "Ataque ransomware al servidor de base de datos de vacunados", "FODA": "Amenaza", "Activo": "Ciberamenazas externas a sistemas de salud p\u00fablica del Per\u00fa", "Probabilidad_Txt": "ALTO", "Impacto_Txt": "ALTO", "Probabilidad_Num": 3, "Impacto_Num": 3, "Nivel_Riesgo": 9, "Nivel_Clasificacion": "Cr\u00edtico", "A\u00f1o_Registro": 2023}, {"ID_Riesgo": "R02", "Riesgo": "Fuga de informaci\u00f3n personal de pacientes vacunados", "FODA": "Debilidad", "Activo": "Base de datos de vacunados adultos (Power BI \u2013 DIRESA Jun\u00edn)", "Probabilidad_Txt": "ALTO", "Impacto_Txt": "ALTO", "Probabilidad_Num": 3, "Impacto_Num": 3, "Nivel_Riesgo": 9, "Nivel_Clasificacion": "Cr\u00edtico", "A\u00f1o_Registro": 2023}, {"ID_Riesgo": "R03", "Riesgo": "P\u00e9rdida o robo de dispositivos con datos de pacientes", "FODA": "Amenaza", "Activo": "Laptops y tablets de los vacunadores m\u00f3viles en campo", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "MEDIO", "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Nivel_Clasificacion": "Medio", "A\u00f1o_Registro": 2023}, {"ID_Riesgo": "R04", "Riesgo": "Ca\u00edda del servidor principal de registro de vacunaci\u00f3n", "FODA": "Debilidad", "Activo": "Servidores del sistema de cobertura de vacunaci\u00f3n regional", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "ALTO", "Probabilidad_Num": 2, "Impacto_Num": 3, "Nivel_Riesgo": 6, "Nivel_Clasificacion": "Alto", "A\u00f1o_Registro": 2023}, {"ID_Riesgo": "R05", "Riesgo": "Acceso no autorizado a la red interna de la DIRESA", "FODA": "Amenaza", "Activo": "Red de comunicaciones interna de la DIRESA Jun\u00edn", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "MEDIO", "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Nivel_Clasificacion": "Medio", "A\u00f1o_Registro": 2024}, {"ID_Riesgo": "R06", "Riesgo": "Uso indebido de credenciales del sistema por personal interno", "FODA": "Debilidad", "Activo": "Personal de salud con acceso a datos de pacientes (Tarma, Jauja)", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "MEDIO", "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Nivel_Clasificacion": "Medio", "A\u00f1o_Registro": 2023}, {"ID_Riesgo": "R07", "Riesgo": "Vulnerabilidades en software de terceros para registro de vacunas", "FODA": "Amenaza", "Activo": "Proveedores externos de software m\u00e9dico (terceros)", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "ALTO", "Probabilidad_Num": 2, "Impacto_Num": 3, "Nivel_Riesgo": 6, "Nivel_Clasificacion": "Alto", "A\u00f1o_Registro": 2024}, {"ID_Riesgo": "R08", "Riesgo": "Presupuesto insuficiente para actualizaci\u00f3n de infraestructura TI", "FODA": "Debilidad", "Activo": "Financiamiento para infraestructura tecnol\u00f3gica de salud", "Probabilidad_Txt": "BAJO", "Impacto_Txt": "MEDIO", "Probabilidad_Num": 1, "Impacto_Num": 2, "Nivel_Riesgo": 2, "Nivel_Clasificacion": "Bajo", "A\u00f1o_Registro": 2023}, {"ID_Riesgo": "R09", "Riesgo": "Interrupci\u00f3n de comunicaciones en zonas rurales (Satipo/Chanchamayo)", "FODA": "Amenaza", "Activo": "Conectividad y cobertura de red en provincias rurales (Satipo)", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "MEDIO", "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Nivel_Clasificacion": "Medio", "A\u00f1o_Registro": 2024}, {"ID_Riesgo": "R10", "Riesgo": "Phishing dirigido a funcionarios de la DIRESA Jun\u00edn", "FODA": "Amenaza", "Activo": "Ciberamenazas externas a sistemas de salud p\u00fablica del Per\u00fa", "Probabilidad_Txt": "ALTO", "Impacto_Txt": "MEDIO", "Probabilidad_Num": 3, "Impacto_Num": 2, "Nivel_Riesgo": 6, "Nivel_Clasificacion": "Alto", "A\u00f1o_Registro": 2024}, {"ID_Riesgo": "R11", "Riesgo": "P\u00e9rdida de datos por fallo en el sistema de backup", "FODA": "Debilidad", "Activo": "Backups y respaldos del sistema de vacunaci\u00f3n (Huancayo)", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "ALTO", "Probabilidad_Num": 2, "Impacto_Num": 3, "Nivel_Riesgo": 6, "Nivel_Clasificacion": "Alto", "A\u00f1o_Registro": 2024}, {"ID_Riesgo": "R12", "Riesgo": "Ingreso de datos err\u00f3neos en el sistema de vacunaci\u00f3n", "FODA": "Amenaza", "Activo": "Vacunadores de campo en las provincias de Satipo y Chanchamayo", "Probabilidad_Txt": "BAJO", "Impacto_Txt": "BAJO", "Probabilidad_Num": 1, "Impacto_Num": 1, "Nivel_Riesgo": 1, "Nivel_Clasificacion": "Bajo", "A\u00f1o_Registro": 2024}, {"ID_Riesgo": "R13", "Riesgo": "Incumplimiento de pol\u00edticas internas de seguridad de la informaci\u00f3n", "FODA": "Debilidad", "Activo": "Pol\u00edticas de seguridad de la informaci\u00f3n de la DIRESA Jun\u00edn", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "MEDIO", "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Nivel_Clasificacion": "Medio", "A\u00f1o_Registro": 2024}, {"ID_Riesgo": "R14", "Riesgo": "No adaptaci\u00f3n al marco regulatorio de protecci\u00f3n de datos MINSA", "FODA": "Oportunidad", "Activo": "Regulaciones MINSA sobre protecci\u00f3n de datos de pacientes", "Probabilidad_Txt": "MEDIO", "Impacto_Txt": "ALTO", "Probabilidad_Num": 2, "Impacto_Num": 3, "Nivel_Riesgo": 6, "Nivel_Clasificacion": "Alto", "A\u00f1o_Registro": 2025}, {"ID_Riesgo": "R15", "Riesgo": "Denegaci\u00f3n de servicio (DDoS) al portal de cobertura DIRESA", "FODA": "Amenaza", "Activo": "Ciberamenazas externas a sistemas de salud p\u00fablica del Per\u00fa", "Probabilidad_Txt": "ALTO", "Impacto_Txt": "ALTO", "Probabilidad_Num": 3, "Impacto_Num": 3, "Nivel_Riesgo": 9, "Nivel_Clasificacion": "Cr\u00edtico", "A\u00f1o_Registro": 2025}], "Dim_Control": [{"ID_Control": "C01", "ID_Riesgo": "R01", "Control": "Implementar EDR y segmentaci\u00f3n de red; plan de respuesta a incidentes", "Tipo_Control": "Preventivo", "Tratamiento": "Reducir", "Responsable": "Jefe TI \u2013 DIRESA Jun\u00edn", "Fecha_Control": "2023-01-15 00:00:00", "Causa": "Falta de actualizaciones y parches en los servidores DIRESA"}, {"ID_Control": "C02", "ID_Riesgo": "R02", "Control": "Implementar cifrado AES-256 y control de acceso RBAC", "Tipo_Control": "Preventivo", "Tratamiento": "Reducir", "Responsable": "Responsable de Seguridad TI", "Fecha_Control": "2023-03-01 00:00:00", "Causa": "Control de acceso insuficiente y ausencia de cifrado en la BD"}, {"ID_Control": "C03", "ID_Riesgo": "R03", "Control": "Implementar MDM y cifrado de disco completo en dispositivos", "Tipo_Control": "Preventivo", "Tratamiento": "Reducir", "Responsable": "Coordinador TI \u2013 Satipo/Chanchamayo", "Fecha_Control": "2023-02-15 00:00:00", "Causa": "Ausencia de pol\u00edtica de seguridad para dispositivos m\u00f3viles"}, {"ID_Control": "C04", "ID_Riesgo": "R04", "Control": "Plan de continuidad del negocio y servidor de respaldo en Huancayo", "Tipo_Control": "Correctivo", "Tratamiento": "Asumir", "Responsable": "Infraestructura TI \u2013 DIRESA", "Fecha_Control": "2023-06-01 00:00:00", "Causa": "Infraestructura envejecida sin redundancia ni alta disponibilidad"}, {"ID_Control": "C05", "ID_Riesgo": "R05", "Control": "Implementar VLAN, autenticaci\u00f3n 802.1X y monitoreo SIEM", "Tipo_Control": "Preventivo", "Tratamiento": "Reducir", "Responsable": "Administrador de Red \u2013 DIRESA", "Fecha_Control": "2024-04-01 00:00:00", "Causa": "Contrase\u00f1as d\u00e9biles y redes WiFi sin segmentaci\u00f3n por VLAN"}, {"ID_Control": "C06", "ID_Riesgo": "R06", "Control": "Capacitaci\u00f3n ISO 27001, MFA obligatorio y revisi\u00f3n de privilegios", "Tipo_Control": "Preventivo", "Tratamiento": "Evitar", "Responsable": "RRHH y TI \u2013 DIRESA Jun\u00edn", "Fecha_Control": "2023-05-15 00:00:00", "Causa": "Falta de capacitaci\u00f3n en seguridad y pol\u00edtica de contrase\u00f1as d\u00e9bil"}, {"ID_Control": "C07", "ID_Riesgo": "R07", "Control": "Auditor\u00eda de proveedores, SLA de seguridad y cl\u00e1usulas contractuales", "Tipo_Control": "Preventivo", "Tratamiento": "Reducir", "Responsable": "Responsable de Compras/TI", "Fecha_Control": "2024-07-01 00:00:00", "Causa": "Sin proceso de auditor\u00eda formal a proveedores externos de software"}, {"ID_Control": "C08", "ID_Riesgo": "R08", "Control": "Gesti\u00f3n presupuestal prioritaria con financiamiento GORE Jun\u00edn", "Tipo_Control": "Correctivo", "Tratamiento": "Asumir", "Responsable": "Direcci\u00f3n DIRESA Jun\u00edn", "Fecha_Control": "2023-09-01 00:00:00", "Causa": "Recorte presupuestario y falta de planificaci\u00f3n estrat\u00e9gica en TI"}, {"ID_Control": "C09", "ID_Riesgo": "R09", "Control": "Soluci\u00f3n satelital y formularios offline para vacunadores en campo", "Tipo_Control": "Correctivo", "Tratamiento": "Asumir", "Responsable": "Infraestructura TI \u2013 Satipo", "Fecha_Control": "2024-01-01 00:00:00", "Causa": "Falta de infraestructura de red en zonas rurales de la regi\u00f3n"}, {"ID_Control": "C10", "ID_Riesgo": "R10", "Control": "Simulacros de phishing trimestrales y formaci\u00f3n continua en seguridad", "Tipo_Control": "Preventivo", "Tratamiento": "Reducir", "Responsable": "Responsable de Seguridad TI", "Fecha_Control": "2024-02-01 00:00:00", "Causa": "Falta de conciencia y formaci\u00f3n en ciberseguridad del personal"}, {"ID_Control": "C11", "ID_Riesgo": "R11", "Control": "Backup automatizado 3-2-1 con pruebas de restauraci\u00f3n mensuales", "Tipo_Control": "Correctivo", "Tratamiento": "Reducir", "Responsable": "Coordinador TI \u2013 Huancayo", "Fecha_Control": "2024-03-01 00:00:00", "Causa": "Backups no verificados ni automatizados correctamente (proceso manual)"}, {"ID_Control": "C12", "ID_Riesgo": "R12", "Control": "Validaci\u00f3n autom\u00e1tica en aplicativo m\u00f3vil y capacitaci\u00f3n en campo", "Tipo_Control": "Preventivo", "Tratamiento": "Asumir", "Responsable": "Supervisor de Vacunaci\u00f3n", "Fecha_Control": "2024-06-01 00:00:00", "Causa": "Falta de validaci\u00f3n en formularios y capacitaci\u00f3n insuficiente"}, {"ID_Control": "C13", "ID_Riesgo": "R13", "Control": "Auditor\u00eda interna semestral y difusi\u00f3n activa de pol\u00edticas ISO 27001", "Tipo_Control": "Detectivo", "Tratamiento": "Reducir", "Responsable": "Responsable de Seguridad TI", "Fecha_Control": "2024-09-01 00:00:00", "Causa": "Pol\u00edticas no difundidas ni monitoreadas efectivamente"}, {"ID_Control": "C14", "ID_Riesgo": "R14", "Control": "Revisi\u00f3n legal peri\u00f3dica y adecuaci\u00f3n de procesos al marco MINSA", "Tipo_Control": "Preventivo", "Tratamiento": "Reducir", "Responsable": "Asesor\u00eda Legal \u2013 DIRESA", "Fecha_Control": "2025-01-01 00:00:00", "Causa": "Desconocimiento de la normativa vigente de salud digital"}, {"ID_Control": "C15", "ID_Riesgo": "R15", "Control": "Contratar servicio anti-DDoS y CDN para el portal web institucional", "Tipo_Control": "Preventivo", "Tratamiento": "Evitar", "Responsable": "Jefe TI \u2013 DIRESA Jun\u00edn", "Fecha_Control": "2025-03-01 00:00:00", "Causa": "Sin soluci\u00f3n anti-DDoS implementada en la infraestructura actual"}], "Fact_Evaluacion": [{"ID_Riesgo": "R01", "A\u00f1o_Registro": 2023, "Probabilidad_Num": 3, "Impacto_Num": 3, "Nivel_Riesgo": 9, "Costo_Perdida_USD": 106217.81, "Costo_Control_USD": 29260.71, "Eficacia_Control": 0.8464}, {"ID_Riesgo": "R02", "A\u00f1o_Registro": 2023, "Probabilidad_Num": 3, "Impacto_Num": 3, "Nivel_Riesgo": 9, "Costo_Perdida_USD": 121906.09, "Costo_Control_USD": 17340.28, "Eficacia_Control": 0.7312}, {"ID_Riesgo": "R03", "A\u00f1o_Registro": 2023, "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Costo_Perdida_USD": 9277.84, "Costo_Control_USD": 7330.88, "Eficacia_Control": 0.6803}, {"ID_Riesgo": "R04", "A\u00f1o_Registro": 2023, "Probabilidad_Num": 2, "Impacto_Num": 3, "Nivel_Riesgo": 6, "Costo_Perdida_USD": 65403.63, "Costo_Control_USD": 8144.09, "Eficacia_Control": 0.8425}, {"ID_Riesgo": "R05", "A\u00f1o_Registro": 2024, "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Costo_Perdida_USD": 26313.74, "Costo_Control_USD": 4061.7, "Eficacia_Control": 0.5545}, {"ID_Riesgo": "R06", "A\u00f1o_Registro": 2023, "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Costo_Perdida_USD": 12034.9, "Costo_Control_USD": 4521.21, "Eficacia_Control": 0.6574}, {"ID_Riesgo": "R07", "A\u00f1o_Registro": 2024, "Probabilidad_Num": 2, "Impacto_Num": 3, "Nivel_Riesgo": 6, "Costo_Perdida_USD": 51597.25, "Costo_Control_USD": 10038.6, "Eficacia_Control": 0.753}, {"ID_Riesgo": "R08", "A\u00f1o_Registro": 2023, "Probabilidad_Num": 1, "Impacto_Num": 2, "Nivel_Riesgo": 2, "Costo_Perdida_USD": 1976.46, "Costo_Control_USD": 1230.36, "Eficacia_Control": 0.5099}, {"ID_Riesgo": "R09", "A\u00f1o_Registro": 2024, "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Costo_Perdida_USD": 18033.54, "Costo_Control_USD": 6925.88, "Eficacia_Control": 0.5599}, {"ID_Riesgo": "R10", "A\u00f1o_Registro": 2024, "Probabilidad_Num": 3, "Impacto_Num": 2, "Nivel_Riesgo": 6, "Costo_Perdida_USD": 55711.72, "Costo_Control_USD": 12146.9, "Eficacia_Control": 0.6116}, {"ID_Riesgo": "R11", "A\u00f1o_Registro": 2024, "Probabilidad_Num": 2, "Impacto_Num": 3, "Nivel_Riesgo": 6, "Costo_Perdida_USD": 60377.24, "Costo_Control_USD": 9193.67, "Eficacia_Control": 0.6163}, {"ID_Riesgo": "R12", "A\u00f1o_Registro": 2024, "Probabilidad_Num": 1, "Impacto_Num": 1, "Nivel_Riesgo": 1, "Costo_Perdida_USD": 7642.2, "Costo_Control_USD": 2914.08, "Eficacia_Control": 0.6425}, {"ID_Riesgo": "R13", "A\u00f1o_Registro": 2024, "Probabilidad_Num": 2, "Impacto_Num": 2, "Nivel_Riesgo": 4, "Costo_Perdida_USD": 14701.5, "Costo_Control_USD": 3488.36, "Eficacia_Control": 0.7053}, {"ID_Riesgo": "R14", "A\u00f1o_Registro": 2025, "Probabilidad_Num": 2, "Impacto_Num": 3, "Nivel_Riesgo": 6, "Costo_Perdida_USD": 52007.62, "Costo_Control_USD": 8854.27, "Eficacia_Control": 0.7238}, {"ID_Riesgo": "R15", "A\u00f1o_Registro": 2025, "Probabilidad_Num": 3, "Impacto_Num": 3, "Nivel_Riesgo": 9, "Costo_Perdida_USD": 82407.2, "Costo_Control_USD": 28639.81, "Eficacia_Control": 0.7518}], "Fact_Seguimiento": [{"ID_Riesgo": "R01", "A\u00f1o": 2023, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "EDR instalado en 2024; segmentaci\u00f3n de red completada en 2025"}, {"ID_Riesgo": "R01", "A\u00f1o": 2024, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "EDR instalado en 2024; segmentaci\u00f3n de red completada en 2025"}, {"ID_Riesgo": "R01", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "EDR instalado en 2024; segmentaci\u00f3n de red completada en 2025"}, {"ID_Riesgo": "R02", "A\u00f1o": 2023, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Cifrado AES-256 implementado Q3 2024; RBAC completo en 2025"}, {"ID_Riesgo": "R02", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Cifrado AES-256 implementado Q3 2024; RBAC completo en 2025"}, {"ID_Riesgo": "R02", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "Cifrado AES-256 implementado Q3 2024; RBAC completo en 2025"}, {"ID_Riesgo": "R03", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "MDM desplegado en 2024; dispositivos cifrados 100% en 2025"}, {"ID_Riesgo": "R03", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "MDM desplegado en 2024; dispositivos cifrados 100% en 2025"}, {"ID_Riesgo": "R03", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "MDM desplegado en 2024; dispositivos cifrados 100% en 2025"}, {"ID_Riesgo": "R04", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "Servidor de respaldo en Huancayo operativo desde Q2 2024"}, {"ID_Riesgo": "R04", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Servidor de respaldo en Huancayo operativo desde Q2 2024"}, {"ID_Riesgo": "R04", "A\u00f1o": 2025, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Servidor de respaldo en Huancayo operativo desde Q2 2024"}, {"ID_Riesgo": "R05", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "VLAN implementada 2024; 802.1X y SIEM activos en 2025"}, {"ID_Riesgo": "R05", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "VLAN implementada 2024; 802.1X y SIEM activos en 2025"}, {"ID_Riesgo": "R05", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "VLAN implementada 2024; 802.1X y SIEM activos en 2025"}, {"ID_Riesgo": "R06", "A\u00f1o": 2023, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "MFA habilitado en 2024; capacitaci\u00f3n ISO 27001 anual desde 2025"}, {"ID_Riesgo": "R06", "A\u00f1o": 2024, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "MFA habilitado en 2024; capacitaci\u00f3n ISO 27001 anual desde 2025"}, {"ID_Riesgo": "R06", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "MFA habilitado en 2024; capacitaci\u00f3n ISO 27001 anual desde 2025"}, {"ID_Riesgo": "R07", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "Auditor\u00eda de 3 proveedores completada en 2024"}, {"ID_Riesgo": "R07", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Auditor\u00eda de 3 proveedores completada en 2024"}, {"ID_Riesgo": "R07", "A\u00f1o": 2025, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Auditor\u00eda de 3 proveedores completada en 2024"}, {"ID_Riesgo": "R08", "A\u00f1o": 2023, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Financiamiento GORE aprobado parcialmente en 2024"}, {"ID_Riesgo": "R08", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Financiamiento GORE aprobado parcialmente en 2024"}, {"ID_Riesgo": "R08", "A\u00f1o": 2025, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Financiamiento GORE aprobado parcialmente en 2024"}, {"ID_Riesgo": "R09", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "Soluci\u00f3n satelital activa en Satipo desde Q1 2025"}, {"ID_Riesgo": "R09", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Soluci\u00f3n satelital activa en Satipo desde Q1 2025"}, {"ID_Riesgo": "R09", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "Soluci\u00f3n satelital activa en Satipo desde Q1 2025"}, {"ID_Riesgo": "R10", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "4 simulacros en 2024; tasa de clic reducida a 5% en 2025"}, {"ID_Riesgo": "R10", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "4 simulacros en 2024; tasa de clic reducida a 5% en 2025"}, {"ID_Riesgo": "R10", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "4 simulacros en 2024; tasa de clic reducida a 5% en 2025"}, {"ID_Riesgo": "R11", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "Backup 3-2-1 automatizado y verificado mensualmente desde 2024"}, {"ID_Riesgo": "R11", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Backup 3-2-1 automatizado y verificado mensualmente desde 2024"}, {"ID_Riesgo": "R11", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "Backup 3-2-1 automatizado y verificado mensualmente desde 2024"}, {"ID_Riesgo": "R12", "A\u00f1o": 2023, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Validaci\u00f3n autom\u00e1tica en app m\u00f3vil desde Q2 2024"}, {"ID_Riesgo": "R12", "A\u00f1o": 2024, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "Validaci\u00f3n autom\u00e1tica en app m\u00f3vil desde Q2 2024"}, {"ID_Riesgo": "R12", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "Validaci\u00f3n autom\u00e1tica en app m\u00f3vil desde Q2 2024"}, {"ID_Riesgo": "R13", "A\u00f1o": 2023, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Auditor\u00eda interna semestral establecida; difusi\u00f3n activa en 2025"}, {"ID_Riesgo": "R13", "A\u00f1o": 2024, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Auditor\u00eda interna semestral establecida; difusi\u00f3n activa en 2025"}, {"ID_Riesgo": "R13", "A\u00f1o": 2025, "Estado": "EJECUTADO", "Cumpl_Pct": 1, "Observacion": "Auditor\u00eda interna semestral establecida; difusi\u00f3n activa en 2025"}, {"ID_Riesgo": "R14", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "Revisi\u00f3n legal iniciada Q3 2024; adecuaci\u00f3n en curso 2025"}, {"ID_Riesgo": "R14", "A\u00f1o": 2024, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "Revisi\u00f3n legal iniciada Q3 2024; adecuaci\u00f3n en curso 2025"}, {"ID_Riesgo": "R14", "A\u00f1o": 2025, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Revisi\u00f3n legal iniciada Q3 2024; adecuaci\u00f3n en curso 2025"}, {"ID_Riesgo": "R15", "A\u00f1o": 2023, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "Servicio anti-DDoS contratado Q1 2025; CDN en configuraci\u00f3n"}, {"ID_Riesgo": "R15", "A\u00f1o": 2024, "Estado": "PENDIENTE", "Cumpl_Pct": 0, "Observacion": "Servicio anti-DDoS contratado Q1 2025; CDN en configuraci\u00f3n"}, {"ID_Riesgo": "R15", "A\u00f1o": 2025, "Estado": "EN PROCESO", "Cumpl_Pct": 0.5, "Observacion": "Servicio anti-DDoS contratado Q1 2025; CDN en configuraci\u00f3n"}], "Fact_Incidentes": [{"ID_Incidente": "I01", "ID_Riesgo": "R04", "A\u00f1o": 2023, "Severidad": "Alta", "Horas_Resolucion": 38.96, "Activo": "Servidores del sistema de cobertura de vacunaci\u00f3n regional", "Descripcion": "[SIMULADO] Incidente reportado en Servidores del sistema de cobertura de vacunaci\u00f3n regional durante 2023; atendido por Infraestructura TI \u2013 DIRESA"}, {"ID_Incidente": "I02", "ID_Riesgo": "R08", "A\u00f1o": 2023, "Severidad": "Baja", "Horas_Resolucion": 3.25, "Activo": "Financiamiento para infraestructura tecnol\u00f3gica de salud", "Descripcion": "[SIMULADO] Incidente reportado en Financiamiento para infraestructura tecnol\u00f3gica de salud durante 2023; atendido por Direcci\u00f3n DIRESA Jun\u00edn"}, {"ID_Incidente": "I03", "ID_Riesgo": "R04", "A\u00f1o": 2023, "Severidad": "Alta", "Horas_Resolucion": 32.87, "Activo": "Servidores del sistema de cobertura de vacunaci\u00f3n regional", "Descripcion": "[SIMULADO] Incidente reportado en Servidores del sistema de cobertura de vacunaci\u00f3n regional durante 2023; atendido por Infraestructura TI \u2013 DIRESA"}, {"ID_Incidente": "I04", "ID_Riesgo": "R02", "A\u00f1o": 2023, "Severidad": "Cr\u00edtica", "Horas_Resolucion": 103.81, "Activo": "Base de datos de vacunados adultos (Power BI \u2013 DIRESA Jun\u00edn)", "Descripcion": "[SIMULADO] Incidente reportado en Base de datos de vacunados adultos (Power BI \u2013 DIRESA Jun\u00edn) durante 2023; atendido por Responsable de Seguridad TI"}, {"ID_Incidente": "I05", "ID_Riesgo": "R02", "A\u00f1o": 2024, "Severidad": "Cr\u00edtica", "Horas_Resolucion": 76.45, "Activo": "Base de datos de vacunados adultos (Power BI \u2013 DIRESA Jun\u00edn)", "Descripcion": "[SIMULADO] Incidente reportado en Base de datos de vacunados adultos (Power BI \u2013 DIRESA Jun\u00edn) durante 2024; atendido por Responsable de Seguridad TI"}, {"ID_Incidente": "I06", "ID_Riesgo": "R04", "A\u00f1o": 2024, "Severidad": "Alta", "Horas_Resolucion": 52.7, "Activo": "Servidores del sistema de cobertura de vacunaci\u00f3n regional", "Descripcion": "[SIMULADO] Incidente reportado en Servidores del sistema de cobertura de vacunaci\u00f3n regional durante 2024; atendido por Infraestructura TI \u2013 DIRESA"}, {"ID_Incidente": "I07", "ID_Riesgo": "R15", "A\u00f1o": 2025, "Severidad": "Cr\u00edtica", "Horas_Resolucion": 54.37, "Activo": "Ciberamenazas externas a sistemas de salud p\u00fablica del Per\u00fa", "Descripcion": "[SIMULADO] Incidente reportado en Ciberamenazas externas a sistemas de salud p\u00fablica del Per\u00fa durante 2025; atendido por Jefe TI \u2013 DIRESA Jun\u00edn"}]}</script>
+
+  <script>
+    const D = JSON.parse(document.getElementById('dataset').textContent);
+    let currentYear = 0;
+    let currentPage = 0;
+
+    function setYear(y) {
+      currentYear = Number(y);
+      document.querySelectorAll('.pbi-slicer-btn').forEach(b => {
+        b.classList.toggle('active', Number(b.dataset.year) === currentYear);
+      });
+      updateKPIs();
+      renderPage();
+    }
+
+    function setPage(p) {
+      currentPage = Number(p);
+      document.querySelectorAll('.pbi-tab').forEach(t => {
+        t.classList.toggle('active', Number(t.dataset.p) === currentPage);
+      });
+      renderPage();
+    }
+
+    function updateKPIs() {
+      const total = D.Dim_Riesgo.length;
+      document.getElementById('kpiTotal').textContent = total;
+      document.getElementById('kpiNivel').textContent = '5.33';
+
+      let cumpl = '52.2%';
+      let cumplSub = 'Promedio del trienio';
+      let inc = '7';
+      let incSub = 'Total acumulado 2023–2025';
+
+      if (currentYear === 2023) {
+        cumpl = '20.0%'; cumplSub = '0 ejecutados, 15 en proceso';
+        inc = '4'; incSub = 'Año base de medición';
+        document.getElementById('activeContext').innerHTML = 'Contexto: <strong>Corte Anual 2023 (Inicio)</strong>';
+      } else if (currentYear === 2024) {
+        cumpl = '53.3%'; cumplSub = '3 ejecutados, 12 en proceso';
+        inc = '2'; incSub = '↓ 50% de reducción vs base';
+        document.getElementById('activeContext').innerHTML = 'Contexto: <strong>Corte Anual 2024 (Avance)</strong>';
+      } else if (currentYear === 2025) {
+        cumpl = '83.3%'; cumplSub = '10 ejecutados, 5 en proceso';
+        inc = '1'; incSub = '↓ 75% de reducción vs base';
+        document.getElementById('activeContext').innerHTML = 'Contexto: <strong>Corte Anual 2025 (Cierre)</strong>';
+      } else {
+        document.getElementById('activeContext').innerHTML = 'Contexto: <strong>Trienio completo 2023–2025</strong>';
+      }
+
+      document.getElementById('kpiCumpl').textContent = cumpl;
+      document.getElementById('kpiCumplSub').textContent = cumplSub;
+      document.getElementById('kpiInc').textContent = inc;
+      document.getElementById('kpiIncSub').textContent = incSub;
+    }
+
+    function renderPage() {
+      const c = document.getElementById('pageContainer');
+      if (currentPage === 0) renderResumen(c);
+      else if (currentPage === 1) renderMatriz(c);
+      else if (currentPage === 2) renderControles(c);
+      else if (currentPage === 3) renderFinanzas(c);
+      else if (currentPage === 4) renderIncidentes(c);
+      else if (currentPage === 5) renderOptimizacion(c);
+    }
+
+    /* 0. Resumen Ejecutivo */
+    function renderResumen(c) {
+      c.innerHTML = `
+        <div class="pbi-grid-2">
+          <div class="pbi-panel">
+            <div class="pbi-panel-title">Evolución del Cumplimiento de Controles (2023–2025)</div>
+            <svg class="pbi-chart-svg" viewBox="0 0 500 200">
+              <line x1="50" y1="170" x2="450" y2="170" stroke="#E1DFDD" stroke-width="1"/>
+              <line x1="50" y1="20" x2="50" y2="170" stroke="#E1DFDD" stroke-width="1"/>
+              <!-- Grid marks -->
+              <text x="40" y="175" font-size="11" fill="#605E5C" text-anchor="end">0%</text>
+              <text x="40" y="100" font-size="11" fill="#605E5C" text-anchor="end">50%</text>
+              <text x="40" y="25" font-size="11" fill="#605E5C" text-anchor="end">100%</text>
+              <!-- Trend Line -->
+              <polyline fill="none" stroke="#118DFF" stroke-width="3" points="100,140 250,90 400,45"/>
+              <!-- Points -->
+              <circle cx="100" cy="140" r="5" fill="#118DFF"/>
+              <text x="100" y="125" font-size="12" font-weight="700" fill="#252423" text-anchor="middle">20.0%</text>
+              <text x="100" y="188" font-size="12" fill="#605E5C" text-anchor="middle">2023</text>
+
+              <circle cx="250" cy="90" r="5" fill="#118DFF"/>
+              <text x="250" y="75" font-size="12" font-weight="700" fill="#252423" text-anchor="middle">53.3%</text>
+              <text x="250" y="188" font-size="12" fill="#605E5C" text-anchor="middle">2024</text>
+
+              <circle cx="400" cy="45" r="6" fill="#107C41"/>
+              <text x="400" y="30" font-size="12" font-weight="700" fill="#107C41" text-anchor="middle">83.3%</text>
+              <text x="400" y="188" font-size="12" fill="#605E5C" text-anchor="middle">2025</text>
+            </svg>
+          </div>
+
+          <div class="pbi-panel">
+            <div class="pbi-panel-title">Top 5 Riesgos Prioritarios por Nivel</div>
+            <table class="pbi-table">
+              <thead><tr><th>ID</th><th>Riesgo</th><th>Nivel</th><th>Estado 2025</th></tr></thead>
+              <tbody>
+                <tr onclick="showRisk('R01')"><td><strong>R01</strong></td><td>Ransomware en servidor de vacunados</td><td><span class="pbi-badge badge-crit">9 - Crítico</span></td><td><span style="color:var(--pbi-green)">EJECUTADO</span></td></tr>
+                <tr onclick="showRisk('R02')"><td><strong>R02</strong></td><td>Fuga de información personal pacientes</td><td><span class="pbi-badge badge-crit">9 - Crítico</span></td><td><span style="color:var(--pbi-green)">EJECUTADO</span></td></tr>
+                <tr onclick="showRisk('R15')"><td><strong>R15</strong></td><td>Denegación de servicio (DDoS) al portal</td><td><span class="pbi-badge badge-crit">9 - Crítico</span></td><td><span style="color:var(--pbi-orange)">EN PROCESO</span></td></tr>
+                <tr onclick="showRisk('R04')"><td><strong>R04</strong></td><td>Caída del servidor principal de registro</td><td><span class="pbi-badge badge-alto">6 - Alto</span></td><td><span style="color:var(--pbi-orange)">EN PROCESO</span></td></tr>
+                <tr onclick="showRisk('R07')"><td><strong>R07</strong></td><td>Vulnerabilidades software de terceros</td><td><span class="pbi-badge badge-alto">6 - Alto</span></td><td><span style="color:var(--pbi-orange)">EN PROCESO</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 1. Matriz 3x3 */
+    function renderMatriz(c) {
+      c.innerHTML = `
+        <div class="pbi-grid-2">
+          <div class="pbi-panel">
+            <div class="pbi-panel-title">Matriz de Riesgo 3×3 (Probabilidad × Impacto)</div>
+            <table class="pbi-matrix">
+              <thead>
+                <tr><th>Probabilidad \ Impacto</th><th>BAJO</th><th>MEDIO</th><th>ALTO</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>ALTO</th>
+                  <td class="pbi-cell cell-c0">-</td>
+                  <td class="pbi-cell cell-c6" onclick="filterByLevel(6)">1<br><span style="font-size:10px">Alto (R10)</span></td>
+                  <td class="pbi-cell cell-c9" onclick="filterByLevel(9)">3<br><span style="font-size:10px">Crítico (R01,R02,R15)</span></td>
+                </tr>
+                <tr>
+                  <th>MEDIO</th>
+                  <td class="pbi-cell cell-c0">-</td>
+                  <td class="pbi-cell cell-c4" onclick="filterByLevel(4)">5<br><span style="font-size:10px">Medio</span></td>
+                  <td class="pbi-cell cell-c6" onclick="filterByLevel(6)">4<br><span style="font-size:10px">Alto (R04,R07,R11,R14)</span></td>
+                </tr>
+                <tr>
+                  <th>BAJO</th>
+                  <td class="pbi-cell cell-c1" onclick="filterByLevel(1)">1<br><span style="font-size:10px">Bajo (R12)</span></td>
+                  <td class="pbi-cell cell-c2" onclick="filterByLevel(2)">1<br><span style="font-size:10px">Bajo (R08)</span></td>
+                  <td class="pbi-cell cell-c0">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pbi-panel">
+            <div class="pbi-panel-title">Inventario de los 15 Riesgos (Clic para detalle)</div>
+            <div style="max-height:280px;overflow-y:auto">
+              <table class="pbi-table" id="riskTable">
+                <thead><tr><th>ID</th><th>Riesgo</th><th>Nivel</th><th>FODA</th></tr></thead>
+                <tbody>
+                  ${D.Dim_Riesgo.map(r => `
+                    <tr onclick="showRisk('${r.ID_Riesgo}')">
+                      <td><strong>${r.ID_Riesgo}</strong></td>
+                      <td>${r.Riesgo}</td>
+                      <td><span class="pbi-badge badge-${r.Nivel_Clasificacion.toLowerCase()}">${r.Nivel_Riesgo} - ${r.Nivel_Clasificacion}</span></td>
+                      <td>${r.FODA}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 2. Controles */
+    function renderControles(c) {
+      c.innerHTML = `
+        <div class="pbi-panel">
+          <div class="pbi-panel-title">Tratamiento y Seguimiento de Controles (ISO 27001)</div>
+          <table class="pbi-table">
+            <thead><tr><th>ID</th><th>Riesgo Asociado</th><th>Control / Acción</th><th>Tipo</th><th>Responsable</th><th>Tratamiento</th></tr></thead>
+            <tbody>
+              ${D.Dim_Control.map(ctrl => `
+                <tr onclick="showRisk('${ctrl.ID_Riesgo}')">
+                  <td><strong>${ctrl.ID_Control}</strong></td>
+                  <td>${ctrl.ID_Riesgo}</td>
+                  <td>${ctrl.Control}</td>
+                  <td>${ctrl.Tipo_Control}</td>
+                  <td>${ctrl.Responsable}</td>
+                  <td><strong>${ctrl.Tratamiento}</strong></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    /* 3. Finanzas */
+    function renderFinanzas(c) {
+      c.innerHTML = `
+        <div class="pbi-grid-2">
+          <div class="pbi-panel">
+            <div class="pbi-panel-title">Escenario Financiero [SIMULADO] (Pérdida vs Mitigación)</div>
+            <table class="pbi-table" style="font-size:13px">
+              <tr><td><strong>Pérdida Potencial Total:</strong></td><td style="color:var(--pbi-red);font-weight:700">$685,608.74 USD</td></tr>
+              <tr><td><strong>Costo Total de Controles:</strong></td><td style="font-weight:700">$154,090.80 USD</td></tr>
+              <tr><td><strong>Pérdida Evitada por Controles:</strong></td><td style="color:var(--pbi-green);font-weight:700">$499,074.69 USD</td></tr>
+              <tr><td><strong>Exposición Residual:</strong></td><td style="color:var(--pbi-orange);font-weight:700">$186,534.05 USD</td></tr>
+              <tr style="background:#F3F2F1"><td><strong>BENEFICIO NETO:</strong></td><td style="color:var(--pbi-blue);font-size:16px;font-weight:700">$344,983.89 USD</td></tr>
+              <tr style="background:#F3F2F1"><td><strong>RETORNO NETO (ROI SEGURIDAD):</strong></td><td style="color:var(--pbi-green);font-size:16px;font-weight:700">223.9%</td></tr>
+            </table>
+          </div>
+
+          <div class="pbi-panel">
+            <div class="pbi-panel-title">Inversión por Tipo de Control</div>
+            <svg class="pbi-chart-svg" viewBox="0 0 400 200">
+              <!-- Preventivo Bar -->
+              <rect x="120" y="40" width="220" height="26" fill="#118DFF" rx="3"/>
+              <text x="110" y="58" font-size="12" font-weight="600" fill="#252423" text-anchor="end">Preventivo</text>
+              <text x="350" y="58" font-size="12" font-weight="700" fill="#118DFF">$128,144</text>
+              <!-- Correctivo Bar -->
+              <rect x="120" y="90" width="60" height="26" fill="#E66C37" rx="3"/>
+              <text x="110" y="108" font-size="12" font-weight="600" fill="#252423" text-anchor="end">Correctivo</text>
+              <text x="190" y="108" font-size="12" font-weight="700" fill="#E66C37">$22,458</text>
+              <!-- Detectivo Bar -->
+              <rect x="120" y="140" width="15" height="26" fill="#107C41" rx="3"/>
+              <text x="110" y="158" font-size="12" font-weight="600" fill="#252423" text-anchor="end">Detectivo</text>
+              <text x="145" y="158" font-size="12" font-weight="700" fill="#107C41">$3,488</text>
+            </svg>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 4. Incidentes */
+    function renderIncidentes(c) {
+      c.innerHTML = `
+        <div class="pbi-grid-2">
+          <div class="pbi-panel">
+            <div class="pbi-panel-title">Reducción de Incidentes (2023: 4 → 2024: 2 → 2025: 1)</div>
+            <svg class="pbi-chart-svg" viewBox="0 0 400 200">
+              <rect x="80" y="30" width="50" height="130" fill="#D13438" rx="2"/>
+              <text x="105" y="20" font-size="14" font-weight="700" fill="#D13438" text-anchor="middle">4</text>
+              <text x="105" y="180" font-size="12" fill="#605E5C" text-anchor="middle">2023</text>
+
+              <rect x="180" y="95" width="50" height="65" fill="#E66C37" rx="2"/>
+              <text x="205" y="85" font-size="14" font-weight="700" fill="#E66C37" text-anchor="middle">2</text>
+              <text x="205" y="180" font-size="12" fill="#605E5C" text-anchor="middle">2024</text>
+
+              <rect x="280" y="128" width="50" height="32" fill="#107C41" rx="2"/>
+              <text x="305" y="118" font-size="14" font-weight="700" fill="#107C41" text-anchor="middle">1</text>
+              <text x="305" y="180" font-size="12" fill="#605E5C" text-anchor="middle">2025</text>
+            </svg>
+          </div>
+
+          <div class="pbi-panel">
+            <div class="pbi-panel-title">Registro de Incidentes Simulados</div>
+            <table class="pbi-table">
+              <thead><tr><th>ID</th><th>Año</th><th>Riesgo</th><th>Severidad</th><th>Resolución</th></tr></thead>
+              <tbody>
+                ${D.Fact_Incidentes.map(i => `
+                  <tr>
+                    <td><strong>${i.ID_Incidente}</strong></td>
+                    <td>${i.Año}</td>
+                    <td>${i.ID_Riesgo}</td>
+                    <td><span class="pbi-badge badge-${i.Severidad === 'Crítica' ? 'crit' : (i.Severidad === 'Alta' ? 'alto' : 'bajo')}">${i.Severidad}</span></td>
+                    <td>${i.Horas_Resolucion} h</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    /* 5. Optimización Plan P1 */
+    function renderOptimizacion(c) {
+      c.innerHTML = `
+        <div class="pbi-panel">
+          <div class="pbi-panel-title">Plan P1 de Cierre Prioritario al 2025 (5 Controles al 50%)</div>
+          <table class="pbi-table">
+            <thead><tr><th>ID</th><th>Riesgo</th><th>Nivel</th><th>Acción Requerida</th><th>Responsable</th><th>Inversión Est.</th></tr></thead>
+            <tbody>
+              <tr><td><strong>R15</strong></td><td>Denegación de servicio (DDoS) al portal</td><td><span class="pbi-badge badge-crit">9 - Crítico</span></td><td>Contratar anti-DDoS y CDN institucional</td><td>Jefe TI – DIRESA Junín</td><td>$28,639.81</td></tr>
+              <tr><td><strong>R04</strong></td><td>Caída del servidor principal de registro</td><td><span class="pbi-badge badge-alto">6 - Alto</span></td><td>Servidor de respaldo en Huancayo</td><td>Infraestructura TI – DIRESA</td><td>$8,144.09</td></tr>
+              <tr><td><strong>R07</strong></td><td>Vulnerabilidades en software de terceros</td><td><span class="pbi-badge badge-alto">6 - Alto</span></td><td>Auditoría de proveedores y SLAs</td><td>Responsable Compras/TI</td><td>$10,038.60</td></tr>
+              <tr><td><strong>R14</strong></td><td>Marco regulatorio de protección de datos</td><td><span class="pbi-badge badge-alto">6 - Alto</span></td><td>Revisión legal y adecuación MINSA</td><td>Asesoría Legal – DIRESA</td><td>$8,854.27</td></tr>
+              <tr><td><strong>R08</strong></td><td>Presupuesto infraestructura TI</td><td><span class="pbi-badge badge-bajo">2 - Bajo</span></td><td>Gestión financiamiento GORE Junín</td><td>Dirección DIRESA Junín</td><td>$1,230.36</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function showRisk(id) {
+      const r = D.Dim_Riesgo.find(x => x.ID_Riesgo === id);
+      const c = D.Dim_Control.find(x => x.ID_Riesgo === id);
+      const e = D.Fact_Evaluacion.find(x => x.ID_Riesgo === id);
+      if (!r) return;
+
+      document.getElementById('modalTitle').textContent = `Ficha Técnica: ${r.ID_Riesgo} · ${r.Riesgo}`;
+      document.getElementById('modalBody').innerHTML = `
+        <p><strong>Nivel de Riesgo:</strong> ${r.Nivel_Riesgo} (${r.Nivel_Clasificacion}) | <strong>Probabilidad:</strong> ${r.Probabilidad_Txt} | <strong>Impacto:</strong> ${r.Impacto_Txt}</p>
+        <p><strong>Activo Afectado:</strong> ${r.Activo}</p>
+        <p><strong>FODA:</strong> ${r.FODA} | <strong>Año Registro:</strong> ${r.Año_Registro}</p>
+        <hr style="margin:12px 0;border:0;border-top:1px solid #E1DFDD">
+        <p><strong>Control Asignado:</strong> ${c ? c.Control : 'No especificado'}</p>
+        <p><strong>Responsable:</strong> ${c ? c.Responsable : 'TI'} | <strong>Tratamiento:</strong> ${c ? c.Tratamiento : 'Reducir'}</p>
+        <p><strong>Causa Raíz:</strong> ${c ? c.Causa : 'En análisis'}</p>
+        <hr style="margin:12px 0;border:0;border-top:1px solid #E1DFDD">
+        <p><strong>Costo Pérdida Estimada:</strong> $${e ? e.Costo_Perdida_USD.toLocaleString() : 0} USD</p>
+        <p><strong>Costo de Control:</strong> $${e ? e.Costo_Control_USD.toLocaleString() : 0} USD | <strong>Eficacia:</strong> ${e ? (e.Eficacia_Control * 100).toFixed(1) : 0}%</p>
+      `;
+      document.getElementById('pbiModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('pbiModal').classList.remove('open');
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('¡Enlace de Power BI copiado al portapapeles!');
+      });
+    }
+
+    // Init
+    updateKPIs();
+    renderPage();
+  </script>
+</body>
+</html>
